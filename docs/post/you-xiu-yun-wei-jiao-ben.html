@@ -89,7 +89,7 @@ fi
 ```
 ### 加固系统的一些配置
 
-```
+```shell
 #! /bin/bash
 # Function:对账户的密码的一些加固
 read -p '设置密码最多可多少天不修改：' A
@@ -258,7 +258,7 @@ fi
 ```
 ### 加固系统的一些配置
 
-```
+```shell
 #! /bin/bash
 # Function:对账户的密码的一些加固
 read -p '设置密码最多可多少天不修改：' A
@@ -487,93 +487,92 @@ n=<span class="pl-s"><span class="pl-pds">`</span>cat /etc/passwd <span class="p
   <span class="pl-k">fi</span>
 <span class="pl-k">fi</span></pre></div>
 <h3>加固系统的一些配置</h3>
-<pre class="notranslate"><code class="notranslate">#! /bin/bash
-# Function:对账户的密码的一些加固
-read -p "设置密码最多可多少天不修改：" A
-read -p "设置密码修改之间最小的天数：" B
-read -p "设置密码最短的长度：" C
-read -p "设置密码失效前多少天通知用户：" D
-sed -i '/^PASS_MAX_DAYS/c\PASS_MAX_DAYS '$A'' /etc/login.defs
-sed -i '/^PASS_MIN_DAYS/c\PASS_MIN_DAYS '$B'' /etc/login.defs
-sed -i '/^PASS_MIN_LEN/c\PASS_MIN_LEN '$C'' /etc/login.defs
-sed -i '/^PASS_WARN_AGE/c\PASS_WARN_AGE '$D'' /etc/login.defs
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span> /bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> Function:对账户的密码的一些加固</span>
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>设置密码最多可多少天不修改：<span class="pl-pds">"</span></span> A
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>设置密码修改之间最小的天数：<span class="pl-pds">"</span></span> B
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>设置密码最短的长度：<span class="pl-pds">"</span></span> C
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>设置密码失效前多少天通知用户：<span class="pl-pds">"</span></span> D
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/^PASS_MAX_DAYS/c\PASS_MAX_DAYS <span class="pl-pds">'</span></span><span class="pl-smi">$A</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> /etc/login.defs
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/^PASS_MIN_DAYS/c\PASS_MIN_DAYS <span class="pl-pds">'</span></span><span class="pl-smi">$B</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> /etc/login.defs
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/^PASS_MIN_LEN/c\PASS_MIN_LEN <span class="pl-pds">'</span></span><span class="pl-smi">$C</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> /etc/login.defs
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/^PASS_WARN_AGE/c\PASS_WARN_AGE <span class="pl-pds">'</span></span><span class="pl-smi">$D</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> /etc/login.defs
 
-echo "已对密码进行加固，新用户不得和旧密码相同，且新密码必须同时包含数字、小写字母，大写字母！！"
-sed -i '/pam_pwquality.so/c\password requisite pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type= difok=1 minlen=8 ucredit=-1 lcredit=-1 dcredit=-1' /etc/pam.d/system-auth
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>已对密码进行加固，新用户不得和旧密码相同，且新密码必须同时包含数字、小写字母，大写字母！！<span class="pl-pds">"</span></span>
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/pam_pwquality.so/c\password requisite pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type= difok=1 minlen=8 ucredit=-1 lcredit=-1 dcredit=-1<span class="pl-pds">'</span></span> /etc/pam.d/system-auth
 
-echo "已对密码进行加固，如果输入错误密码超过3次，则锁定账户！！"
-n=`cat /etc/pam.d/sshd | grep "auth required pam_tally2.so "|wc -l`
-if [ $n -eq 0 ];then
-sed -i '/%PAM-1.0/a\auth required pam_tally2.so deny=3 unlock_time=150 even_deny_root root_unlock_time300' /etc/pam.d/sshd
-fi
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>已对密码进行加固，如果输入错误密码超过3次，则锁定账户！！<span class="pl-pds">"</span></span>
+n=<span class="pl-s"><span class="pl-pds">`</span>cat /etc/pam.d/sshd <span class="pl-k">|</span> grep <span class="pl-s"><span class="pl-pds">"</span>auth required pam_tally2.so <span class="pl-pds">"</span></span><span class="pl-k">|</span>wc -l<span class="pl-pds">`</span></span>
+<span class="pl-k">if</span> [ <span class="pl-smi">$n</span> <span class="pl-k">-eq</span> 0 ]<span class="pl-k">;</span><span class="pl-k">then</span>
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/%PAM-1.0/a\auth required pam_tally2.so deny=3 unlock_time=150 even_deny_root root_unlock_time300<span class="pl-pds">'</span></span> /etc/pam.d/sshd
+<span class="pl-k">fi</span>
 
-echo  "已设置禁止root用户远程登录！！"
-sed -i '/PermitRootLogin/c\PermitRootLogin no'  /etc/ssh/sshd_config
+<span class="pl-c1">echo</span>  <span class="pl-s"><span class="pl-pds">"</span>已设置禁止root用户远程登录！！<span class="pl-pds">"</span></span>
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/PermitRootLogin/c\PermitRootLogin no<span class="pl-pds">'</span></span>  /etc/ssh/sshd_config
 
-read -p "设置历史命令保存条数：" E
-read -p "设置账户自动注销时间：" F
-sed -i '/^HISTSIZE/c\HISTSIZE='$E'' /etc/profile
-sed -i '/^HISTSIZE/a\TMOUT='$F'' /etc/profile
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>设置历史命令保存条数：<span class="pl-pds">"</span></span> E
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>设置账户自动注销时间：<span class="pl-pds">"</span></span> F
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/^HISTSIZE/c\HISTSIZE=<span class="pl-pds">'</span></span><span class="pl-smi">$E</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> /etc/profile
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/^HISTSIZE/a\TMOUT=<span class="pl-pds">'</span></span><span class="pl-smi">$F</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> /etc/profile
 
-echo "已设置只允许wheel组的用户可以使用su命令切换到root用户！"
-sed -i '/pam_wheel.so use_uid/c\auth required pam_wheel.so use_uid ' /etc/pam.d/su
-n=`cat /etc/login.defs | grep SU_WHEEL_ONLY | wc -l`
-if [ $n -eq 0 ];then
-echo SU_WHEEL_ONLY yes &gt;&gt; /etc/login.defs
-fi
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>已设置只允许wheel组的用户可以使用su命令切换到root用户！<span class="pl-pds">"</span></span>
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/pam_wheel.so use_uid/c\auth required pam_wheel.so use_uid <span class="pl-pds">'</span></span> /etc/pam.d/su
+n=<span class="pl-s"><span class="pl-pds">`</span>cat /etc/login.defs <span class="pl-k">|</span> grep SU_WHEEL_ONLY <span class="pl-k">|</span> wc -l<span class="pl-pds">`</span></span>
+<span class="pl-k">if</span> [ <span class="pl-smi">$n</span> <span class="pl-k">-eq</span> 0 ]<span class="pl-k">;</span><span class="pl-k">then</span>
+<span class="pl-c1">echo</span> SU_WHEEL_ONLY yes <span class="pl-k">&gt;&gt;</span> /etc/login.defs
+<span class="pl-k">fi</span>
 
-echo "即将对系统中的账户进行检查...."
-echo "系统中有登录权限的用户有："
-awk -F: '($7=="/bin/bash"){print $1}' /etc/passwd
-echo "********************************************"
-echo "系统中UID=0的用户有："
-awk -F: '($3=="0"){print $1}' /etc/passwd
-echo "********************************************"
-N=`awk -F: '($2==""){print $1}' /etc/shadow|wc -l`
-echo "系统中空密码用户有：$N"
-if [ $N -eq 0 ];then
- echo "恭喜你，系统中无空密码用户！！"
- echo "********************************************"
-else
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>即将对系统中的账户进行检查....<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>系统中有登录权限的用户有：<span class="pl-pds">"</span></span>
+awk -F: <span class="pl-s"><span class="pl-pds">'</span>($7=="/bin/bash"){print $1}<span class="pl-pds">'</span></span> /etc/passwd
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>********************************************<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>系统中UID=0的用户有：<span class="pl-pds">"</span></span>
+awk -F: <span class="pl-s"><span class="pl-pds">'</span>($3=="0"){print $1}<span class="pl-pds">'</span></span> /etc/passwd
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>********************************************<span class="pl-pds">"</span></span>
+N=<span class="pl-s"><span class="pl-pds">`</span>awk -F: <span class="pl-s"><span class="pl-pds">'</span>($2==""){print $1}<span class="pl-pds">'</span></span> /etc/shadow<span class="pl-k">|</span>wc -l<span class="pl-pds">`</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>系统中空密码用户有：<span class="pl-smi">$N</span><span class="pl-pds">"</span></span>
+<span class="pl-k">if</span> [ <span class="pl-smi">$N</span> <span class="pl-k">-eq</span> 0 ]<span class="pl-k">;</span><span class="pl-k">then</span>
+ <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>恭喜你，系统中无空密码用户！！<span class="pl-pds">"</span></span>
+ <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>********************************************<span class="pl-pds">"</span></span>
+<span class="pl-k">else</span>
  i=1
- while [ $N -gt 0 ]
- do
-    None=`awk -F: '($2==""){print $1}' /etc/shadow|awk 'NR=='$i'{print}'`
-    echo "------------------------"
-    echo $None
-    echo "必须为空用户设置密码！！"
-    passwd $None
-    let N--
- done
- M=`awk -F: '($2==""){print $1}' /etc/shadow|wc -l`
- if [ $M -eq 0 ];then
-  echo "恭喜，系统中已经没有空密码用户了！"
- else
-echo "系统中还存在空密码用户：$M"
- fi
-fi
+ <span class="pl-k">while</span> [ <span class="pl-smi">$N</span> <span class="pl-k">-gt</span> 0 ]
+ <span class="pl-k">do</span>
+    None=<span class="pl-s"><span class="pl-pds">`</span>awk -F: <span class="pl-s"><span class="pl-pds">'</span>($2==""){print $1}<span class="pl-pds">'</span></span> /etc/shadow<span class="pl-k">|</span>awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>------------------------<span class="pl-pds">"</span></span>
+    <span class="pl-c1">echo</span> <span class="pl-smi">$None</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>必须为空用户设置密码！！<span class="pl-pds">"</span></span>
+    passwd <span class="pl-smi">$None</span>
+    <span class="pl-c1">let</span> N--
+ <span class="pl-k">done</span>
+ M=<span class="pl-s"><span class="pl-pds">`</span>awk -F: <span class="pl-s"><span class="pl-pds">'</span>($2==""){print $1}<span class="pl-pds">'</span></span> /etc/shadow<span class="pl-k">|</span>wc -l<span class="pl-pds">`</span></span>
+ <span class="pl-k">if</span> [ <span class="pl-smi">$M</span> <span class="pl-k">-eq</span> 0 ]<span class="pl-k">;</span><span class="pl-k">then</span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>恭喜，系统中已经没有空密码用户了！<span class="pl-pds">"</span></span>
+ <span class="pl-k">else</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>系统中还存在空密码用户：<span class="pl-smi">$M</span><span class="pl-pds">"</span></span>
+ <span class="pl-k">fi</span>
+<span class="pl-k">fi</span>
 
-echo "即将对系统中重要文件进行锁定，锁定后将无法添加删除用户和组"
-read -p "警告：此脚本运行后将无法添加删除用户和组！！确定输入Y，取消输入N；Y/N：" i
-case $i in
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>即将对系统中重要文件进行锁定，锁定后将无法添加删除用户和组<span class="pl-pds">"</span></span>
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>警告：此脚本运行后将无法添加删除用户和组！！确定输入Y，取消输入N；Y/N：<span class="pl-pds">"</span></span> i
+<span class="pl-k">case</span> <span class="pl-smi">$i</span> <span class="pl-k">in</span>
       [Y,y])
             chattr +i /etc/passwd
             chattr +i /etc/shadow
             chattr +i /etc/group
             chattr +i /etc/gshadow
-            echo "锁定成功！"
+            <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>锁定成功！<span class="pl-pds">"</span></span>
 ;;
       [N,n])
             chattr -i /etc/passwd
             chattr -i /etc/shadow
             chattr -i /etc/group
             chattr -i /etc/gshadow
-            echo "取消锁定成功！！"
+            <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>取消锁定成功！！<span class="pl-pds">"</span></span>
 ;;
-       *)
-            echo "请输入Y/y or N/n"
-esac
-</code></pre></div>
+       <span class="pl-k">*</span>)
+            <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>请输入Y/y or N/n<span class="pl-pds">"</span></span>
+<span class="pl-k">esac</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
