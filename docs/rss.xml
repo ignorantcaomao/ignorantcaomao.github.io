@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Blog Title</title><link>https://ignorantcaomao.github.io</link><description>Blog description</description><copyright>Blog Title</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://ignorantcaomao.github.io</link></image><lastBuildDate>Thu, 10 Oct 2024 07:33:35 +0000</lastBuildDate><managingEditor>Blog Title</managingEditor><ttl>60</ttl><webMaster>Blog Title</webMaster><item><title>优秀运维脚本</title><link>https://ignorantcaomao.github.io/post/you-xiu-yun-wei-jiao-ben.html</link><description>### 根据PID过滤进程所有信息&#13;
-```&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Blog Title</title><link>https://ignorantcaomao.github.io</link><description>Blog description</description><copyright>Blog Title</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://ignorantcaomao.github.io</link></image><lastBuildDate>Thu, 10 Oct 2024 07:36:39 +0000</lastBuildDate><managingEditor>Blog Title</managingEditor><ttl>60</ttl><webMaster>Blog Title</webMaster><item><title>优秀运维脚本</title><link>https://ignorantcaomao.github.io/post/you-xiu-yun-wei-jiao-ben.html</link><description>### 根据PID过滤进程所有信息&#13;
+```shell&#13;
 #! /bin/bash&#13;
 # Function: 根据用户输入的PID，过滤出该PID所有的信息&#13;
 read -p '请输入要查询的PID: ' P&#13;
@@ -24,7 +24,7 @@ echo '--------------------------------'&#13;
 ```&#13;
 ### 根据进程名过滤进程信息&#13;
 &#13;
-```&#13;
+```shell&#13;
 #! /bin/bash&#13;
 # Function: 根据输入的程序的名字过滤出所对应的PID，并显示出详细信息，如果有几个PID，则全部显示&#13;
 read -p '请输入要查询的进程名：' NAME&#13;
@@ -51,7 +51,7 @@ done&#13;
 ```&#13;
 ### 根据用户名查询该用户的相关信息&#13;
 &#13;
-```&#13;
+```shell&#13;
 #! /bin/bash&#13;
 # Function：根据用户名查询该用户的所有信息&#13;
 read -p '请输入要查询的用户名：' A&#13;

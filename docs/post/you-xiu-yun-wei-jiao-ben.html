@@ -11,7 +11,7 @@
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
 <meta name="description" content="### 根据PID过滤进程所有信息
-```
+```shell
 #! /bin/bash
 # Function: 根据用户输入的PID，过滤出该PID所有的信息
 read -p '请输入要查询的PID: ' P
@@ -35,7 +35,7 @@ echo '--------------------------------'
 ```
 ### 根据进程名过滤进程信息
 
-```
+```shell
 #! /bin/bash
 # Function: 根据输入的程序的名字过滤出所对应的PID，并显示出详细信息，如果有几个PID，则全部显示
 read -p '请输入要查询的进程名：' NAME
@@ -62,7 +62,7 @@ done
 ```
 ### 根据用户名查询该用户的相关信息
 
-```
+```shell
 #! /bin/bash
 # Function：根据用户名查询该用户的所有信息
 read -p '请输入要查询的用户名：' A
@@ -180,7 +180,7 @@ esac
 。">
 <meta property="og:title" content="优秀运维脚本">
 <meta property="og:description" content="### 根据PID过滤进程所有信息
-```
+```shell
 #! /bin/bash
 # Function: 根据用户输入的PID，过滤出该PID所有的信息
 read -p '请输入要查询的PID: ' P
@@ -204,7 +204,7 @@ echo '--------------------------------'
 ```
 ### 根据进程名过滤进程信息
 
-```
+```shell
 #! /bin/bash
 # Function: 根据输入的程序的名字过滤出所对应的PID，并显示出详细信息，如果有几个PID，则全部显示
 read -p '请输入要查询的进程名：' NAME
@@ -231,7 +231,7 @@ done
 ```
 ### 根据用户名查询该用户的相关信息
 
-```
+```shell
 #! /bin/bash
 # Function：根据用户名查询该用户的所有信息
 read -p '请输入要查询的用户名：' A
@@ -351,7 +351,7 @@ esac
 <meta property="og:url" content="https://ignorantcaomao.github.io/post/you-xiu-yun-wei-jiao-ben.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>优秀运维脚本</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -418,77 +418,74 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h3>根据PID过滤进程所有信息</h3>
-<pre class="notranslate"><code class="notranslate">#! /bin/bash
-# Function: 根据用户输入的PID，过滤出该PID所有的信息
-read -p "请输入要查询的PID: " P
-n=`ps -aux| awk '$2~/^'$P'$/{print $11}'|wc -l`
-if [ $n -eq 0 ];then
- echo "该PID不存在！！"
- exit
-fi
-echo "--------------------------------"
-echo "进程PID: $P"
-echo "进程命令：`ps -aux| awk '$2~/^'$P'$/{print $11}'`"
-echo "进程所属用户: `ps -aux| awk '$2~/^'$P'$/{print $1}'`"
-echo "CPU占用率：`ps -aux| awk '$2~/^'$P'$/{print $3}'`%"
-echo "内存占用率：`ps -aux| awk '$2~/^'$P'$/{print $4}'`%"
-echo "进程开始运行的时刻：`ps -aux| awk '$2~/^'$P'$/{print $9}'`"
-echo "进程运行的时间：`ps -aux| awk '$2~/^'$P'$/{print $10}'`"
-echo "进程状态：`ps -aux| awk '$2~/^'$P'$/{print $8}'`"
-echo "进程虚拟内存：`ps -aux| awk '$2~/^'$P'$/{print $5}'`"
-echo "进程共享内存：`ps -aux| awk '$2~/^'$P'$/{print $6}'`"
-echo "--------------------------------"
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span> /bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> Function: 根据用户输入的PID，过滤出该PID所有的信息</span>
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>请输入要查询的PID: <span class="pl-pds">"</span></span> P
+n=<span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $11}<span class="pl-pds">'</span></span><span class="pl-k">|</span>wc -l<span class="pl-pds">`</span></span>
+<span class="pl-k">if</span> [ <span class="pl-smi">$n</span> <span class="pl-k">-eq</span> 0 ]<span class="pl-k">;</span><span class="pl-k">then</span>
+ <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该PID不存在！！<span class="pl-pds">"</span></span>
+ <span class="pl-c1">exit</span>
+<span class="pl-k">fi</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>--------------------------------<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程PID: <span class="pl-smi">$P</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程命令：<span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $11}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程所属用户: <span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $1}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>CPU占用率：<span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $3}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span>%<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>内存占用率：<span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $4}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span>%<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程开始运行的时刻：<span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $9}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程运行的时间：<span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $10}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程状态：<span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $8}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程虚拟内存：<span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $5}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程共享内存：<span class="pl-s"><span class="pl-pds">`</span>ps -aux<span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>$2~/^<span class="pl-pds">'</span></span><span class="pl-smi">$P</span><span class="pl-s"><span class="pl-pds">'</span>$/{print $6}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>--------------------------------<span class="pl-pds">"</span></span></pre></div>
 <h3>根据进程名过滤进程信息</h3>
-<pre class="notranslate"><code class="notranslate">#! /bin/bash
-# Function: 根据输入的程序的名字过滤出所对应的PID，并显示出详细信息，如果有几个PID，则全部显示
-read -p "请输入要查询的进程名：" NAME
-N=`ps -aux | grep $NAME | grep -v grep | wc -l` ##统计进程总数
-if [ $N -le 0 ];then
-  echo "该进程名没有运行！"
-fi
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span> /bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> Function: 根据输入的程序的名字过滤出所对应的PID，并显示出详细信息，如果有几个PID，则全部显示</span>
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>请输入要查询的进程名：<span class="pl-pds">"</span></span> NAME
+N=<span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> wc -l<span class="pl-pds">`</span></span> <span class="pl-c"><span class="pl-c">#</span>#统计进程总数</span>
+<span class="pl-k">if</span> [ <span class="pl-smi">$N</span> <span class="pl-k">-le</span> 0 ]<span class="pl-k">;</span><span class="pl-k">then</span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该进程名没有运行！<span class="pl-pds">"</span></span>
+<span class="pl-k">fi</span>
 i=1
-while [ $N -gt 0 ]
-do
-  echo "进程PID: `ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $2}'`"
-  echo "进程命令：`ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $11}'`"
-  echo "进程所属用户: `ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $1}'`"
-  echo "CPU占用率：`ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $3}'`%"
-  echo "内存占用率：`ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $4}'`%"
-  echo "进程开始运行的时刻：`ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $9}'`"
-  echo "进程运行的时间：` ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $11}'`"
-  echo "进程状态：`ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $8}'`"
-  echo "进程虚拟内存：`ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $5}'`"
-  echo "进程共享内存：`ps -aux | grep $NAME | grep -v grep | awk 'NR=='$i'{print $0}'| awk '{print $6}'`"
-  echo "***************************************************************"
-  let N-- i++
-done
-</code></pre>
+<span class="pl-k">while</span> [ <span class="pl-smi">$N</span> <span class="pl-k">-gt</span> 0 ]
+<span class="pl-k">do</span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程PID: <span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $2}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程命令：<span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $11}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程所属用户: <span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $1}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>CPU占用率：<span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $3}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span>%<span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>内存占用率：<span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $4}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span>%<span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程开始运行的时刻：<span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $9}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程运行的时间：<span class="pl-s"><span class="pl-pds">`</span> ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $11}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程状态：<span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $8}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程虚拟内存：<span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $5}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>进程共享内存：<span class="pl-s"><span class="pl-pds">`</span>ps -aux <span class="pl-k">|</span> grep <span class="pl-smi">$NAME</span> <span class="pl-k">|</span> grep -v grep <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>NR==<span class="pl-pds">'</span></span><span class="pl-smi">$i</span><span class="pl-s"><span class="pl-pds">'</span>{print $0}<span class="pl-pds">'</span></span><span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $6}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>***************************************************************<span class="pl-pds">"</span></span>
+  <span class="pl-c1">let</span> N-- i++
+<span class="pl-k">done</span></pre></div>
 <h3>根据用户名查询该用户的相关信息</h3>
-<pre class="notranslate"><code class="notranslate">#! /bin/bash
-# Function：根据用户名查询该用户的所有信息
-read -p "请输入要查询的用户名：" A
-echo "------------------------------"
-n=`cat /etc/passwd | awk -F: '$1~/^'$A'$/{print}' | wc -l`
-if [ $n -eq 0 ];then
-echo "该用户不存在"
-echo "------------------------------"
-else
-  echo "该用户的用户名：$A"
-  echo "该用户的UID：`cat /etc/passwd | awk -F: '$1~/^'$A'$/{print}'|awk -F: '{print $3}'`"
-  echo "该用户的组为：`id $A | awk {'print $3'}`"
-  echo "该用户的GID为：`cat /etc/passwd | awk -F: '$1~/^'$A'$/{print}'|awk -F: '{print $4}'`"
-  echo "该用户的家目录为：`cat /etc/passwd | awk -F: '$1~/^'$A'$/{print}'|awk -F: '{print $6}'`"
-  Login=`cat /etc/passwd | awk -F: '$1~/^'$A'$/{print}'|awk -F: '{print $7}'`
-  if [ $Login == "/bin/bash" ];then
-  echo "该用户有登录系统的权限！！"
-  echo "------------------------------"
-  elif [ $Login == "/sbin/nologin" ];then
-  echo "该用户没有登录系统的权限！！"
-  echo "------------------------------"
-  fi
-fi
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span> /bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> Function：根据用户名查询该用户的所有信息</span>
+<span class="pl-c1">read</span> -p <span class="pl-s"><span class="pl-pds">"</span>请输入要查询的用户名：<span class="pl-pds">"</span></span> A
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>------------------------------<span class="pl-pds">"</span></span>
+n=<span class="pl-s"><span class="pl-pds">`</span>cat /etc/passwd <span class="pl-k">|</span> awk -F: <span class="pl-s"><span class="pl-pds">'</span>$1~/^<span class="pl-pds">'</span></span><span class="pl-smi">$A</span><span class="pl-s"><span class="pl-pds">'</span>$/{print}<span class="pl-pds">'</span></span> <span class="pl-k">|</span> wc -l<span class="pl-pds">`</span></span>
+<span class="pl-k">if</span> [ <span class="pl-smi">$n</span> <span class="pl-k">-eq</span> 0 ]<span class="pl-k">;</span><span class="pl-k">then</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该用户不存在<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>------------------------------<span class="pl-pds">"</span></span>
+<span class="pl-k">else</span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该用户的用户名：<span class="pl-smi">$A</span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该用户的UID：<span class="pl-s"><span class="pl-pds">`</span>cat /etc/passwd <span class="pl-k">|</span> awk -F: <span class="pl-s"><span class="pl-pds">'</span>$1~/^<span class="pl-pds">'</span></span><span class="pl-smi">$A</span><span class="pl-s"><span class="pl-pds">'</span>$/{print}<span class="pl-pds">'</span></span><span class="pl-k">|</span>awk -F: <span class="pl-s"><span class="pl-pds">'</span>{print $3}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该用户的组为：<span class="pl-s"><span class="pl-pds">`</span>id <span class="pl-smi">$A</span> <span class="pl-k">|</span> awk {<span class="pl-s"><span class="pl-pds">'</span>print $3<span class="pl-pds">'</span></span>}<span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该用户的GID为：<span class="pl-s"><span class="pl-pds">`</span>cat /etc/passwd <span class="pl-k">|</span> awk -F: <span class="pl-s"><span class="pl-pds">'</span>$1~/^<span class="pl-pds">'</span></span><span class="pl-smi">$A</span><span class="pl-s"><span class="pl-pds">'</span>$/{print}<span class="pl-pds">'</span></span><span class="pl-k">|</span>awk -F: <span class="pl-s"><span class="pl-pds">'</span>{print $4}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该用户的家目录为：<span class="pl-s"><span class="pl-pds">`</span>cat /etc/passwd <span class="pl-k">|</span> awk -F: <span class="pl-s"><span class="pl-pds">'</span>$1~/^<span class="pl-pds">'</span></span><span class="pl-smi">$A</span><span class="pl-s"><span class="pl-pds">'</span>$/{print}<span class="pl-pds">'</span></span><span class="pl-k">|</span>awk -F: <span class="pl-s"><span class="pl-pds">'</span>{print $6}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span><span class="pl-pds">"</span></span>
+  Login=<span class="pl-s"><span class="pl-pds">`</span>cat /etc/passwd <span class="pl-k">|</span> awk -F: <span class="pl-s"><span class="pl-pds">'</span>$1~/^<span class="pl-pds">'</span></span><span class="pl-smi">$A</span><span class="pl-s"><span class="pl-pds">'</span>$/{print}<span class="pl-pds">'</span></span><span class="pl-k">|</span>awk -F: <span class="pl-s"><span class="pl-pds">'</span>{print $7}<span class="pl-pds">'</span></span><span class="pl-pds">`</span></span>
+  <span class="pl-k">if</span> [ <span class="pl-smi">$Login</span> <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">"</span>/bin/bash<span class="pl-pds">"</span></span> ]<span class="pl-k">;</span><span class="pl-k">then</span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该用户有登录系统的权限！！<span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>------------------------------<span class="pl-pds">"</span></span>
+  <span class="pl-k">elif</span> [ <span class="pl-smi">$Login</span> <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">"</span>/sbin/nologin<span class="pl-pds">"</span></span> ]<span class="pl-k">;</span><span class="pl-k">then</span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该用户没有登录系统的权限！！<span class="pl-pds">"</span></span>
+  <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>------------------------------<span class="pl-pds">"</span></span>
+  <span class="pl-k">fi</span>
+<span class="pl-k">fi</span></pre></div>
 <h3>加固系统的一些配置</h3>
 <pre class="notranslate"><code class="notranslate">#! /bin/bash
 # Function:对账户的密码的一些加固
