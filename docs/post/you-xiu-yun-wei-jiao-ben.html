@@ -177,7 +177,26 @@ case $i in
             echo '请输入Y/y or N/n'
 esac
 ```
-。">
+
+### ssh 远程连接免输密码
+```shell
+#!/bin/bash
+ 
+# 安装sshpass工具
+yum install -y sshpass
+
+# 目标服务器的IP地址或主机名
+HOST='192.168.3.55'
+# 登录用户名
+USER='root'
+# 登录密码
+PASS='1-techstar'
+# 要执行的命令
+COMMAND='ls'
+ 
+# 使用sshpass执行SSH命令
+sshpass -p $PASS ssh -o StrictHostKeyChecking=no -p 22 $USER@$HOST $COMMAND
+```。">
 <meta property="og:title" content="优秀运维脚本">
 <meta property="og:description" content="### 根据PID过滤进程所有信息
 ```shell
@@ -346,7 +365,26 @@ case $i in
             echo '请输入Y/y or N/n'
 esac
 ```
-。">
+
+### ssh 远程连接免输密码
+```shell
+#!/bin/bash
+ 
+# 安装sshpass工具
+yum install -y sshpass
+
+# 目标服务器的IP地址或主机名
+HOST='192.168.3.55'
+# 登录用户名
+USER='root'
+# 登录密码
+PASS='1-techstar'
+# 要执行的命令
+COMMAND='ls'
+ 
+# 使用sshpass执行SSH命令
+sshpass -p $PASS ssh -o StrictHostKeyChecking=no -p 22 $USER@$HOST $COMMAND
+```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://ignorantcaomao.github.io/post/you-xiu-yun-wei-jiao-ben.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
@@ -572,7 +610,24 @@ N=<span class="pl-s"><span class="pl-pds">`</span>awk -F: <span class="pl-s"><sp
 ;;
        <span class="pl-k">*</span>)
             <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>请输入Y/y or N/n<span class="pl-pds">"</span></span>
-<span class="pl-k">esac</span></pre></div></div>
+<span class="pl-k">esac</span></pre></div>
+<h3>ssh 远程连接免输密码</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+ 
+<span class="pl-c"><span class="pl-c">#</span> 安装sshpass工具</span>
+yum install -y sshpass
+
+<span class="pl-c"><span class="pl-c">#</span> 目标服务器的IP地址或主机名</span>
+HOST=<span class="pl-s"><span class="pl-pds">'</span>192.168.3.55<span class="pl-pds">'</span></span>
+<span class="pl-c"><span class="pl-c">#</span> 登录用户名</span>
+USER=<span class="pl-s"><span class="pl-pds">'</span>root<span class="pl-pds">'</span></span>
+<span class="pl-c"><span class="pl-c">#</span> 登录密码</span>
+PASS=<span class="pl-s"><span class="pl-pds">'</span>1-techstar<span class="pl-pds">'</span></span>
+<span class="pl-c"><span class="pl-c">#</span> 要执行的命令</span>
+COMMAND=<span class="pl-s"><span class="pl-pds">'</span>ls<span class="pl-pds">'</span></span>
+ 
+<span class="pl-c"><span class="pl-c">#</span> 使用sshpass执行SSH命令</span>
+sshpass -p <span class="pl-smi">$PASS</span> ssh -o StrictHostKeyChecking=no -p 22 <span class="pl-smi">$USER</span>@<span class="pl-smi">$HOST</span> <span class="pl-smi">$COMMAND</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
