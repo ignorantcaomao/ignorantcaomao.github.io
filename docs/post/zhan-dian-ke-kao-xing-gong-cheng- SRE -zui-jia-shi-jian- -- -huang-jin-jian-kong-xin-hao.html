@@ -366,111 +366,111 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">fastapi</span> <span class="pl-k">import</span> <span class="pl-v">FastAPI</span>, <span class="pl-v">Request</span>, <span class="pl-v">HTTPException</span>, <span class="pl-v">Response</span>
-<span class="pl-k">from</span> <span class="pl-s1">prometheus_client</span> <span class="pl-k">import</span> <span class="pl-v">Counter</span>, <span class="pl-v">Gauge</span>, <span class="pl-v">Histogram</span>, <span class="pl-s1">generate_latest</span>, <span class="pl-v">CONTENT_TYPE_LATEST</span>
+<span class="pl-k">from</span> <span class="pl-s1">prometheus_client</span> <span class="pl-k">import</span> <span class="pl-v">Counter</span>, <span class="pl-v">Gauge</span>, <span class="pl-v">Histogram</span>, <span class="pl-s1">generate_latest</span>, <span class="pl-c1">CONTENT_TYPE_LATEST</span>
 <span class="pl-k">from</span> <span class="pl-s1">starlette</span>.<span class="pl-s1">responses</span> <span class="pl-k">import</span> <span class="pl-v">StreamingResponse</span>
 <span class="pl-k">import</span> <span class="pl-s1">time</span>
 <span class="pl-k">import</span> <span class="pl-s1">psutil</span>
 
-<span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-v">FastAPI</span>()
+<span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-en">FastAPI</span>()
 
 <span class="pl-c"># Define Prometheus metrics</span>
-<span class="pl-s1">http_requests_total</span> <span class="pl-c1">=</span> <span class="pl-v">Counter</span>(
+<span class="pl-s1">http_requests_total</span> <span class="pl-c1">=</span> <span class="pl-en">Counter</span>(
     <span class="pl-s">"http_requests_total"</span>,
     <span class="pl-s">"Total number of HTTP requests"</span>,
     [<span class="pl-s">"method"</span>, <span class="pl-s">"endpoint"</span>, <span class="pl-s">"http_status"</span>]
 )
-<span class="pl-s1">http_request_duration_seconds</span> <span class="pl-c1">=</span> <span class="pl-v">Histogram</span>(
+<span class="pl-s1">http_request_duration_seconds</span> <span class="pl-c1">=</span> <span class="pl-en">Histogram</span>(
     <span class="pl-s">"http_request_duration_seconds"</span>,
     <span class="pl-s">"HTTP request duration in seconds"</span>,
     [<span class="pl-s">"method"</span>, <span class="pl-s">"endpoint"</span>]
 )
-<span class="pl-s1">http_request_size_bytes</span> <span class="pl-c1">=</span> <span class="pl-v">Histogram</span>(
+<span class="pl-s1">http_request_size_bytes</span> <span class="pl-c1">=</span> <span class="pl-en">Histogram</span>(
     <span class="pl-s">"http_request_size_bytes"</span>,
     <span class="pl-s">"HTTP request size in bytes"</span>,
     [<span class="pl-s">"method"</span>, <span class="pl-s">"endpoint"</span>]
 )
-<span class="pl-s1">http_response_size_bytes</span> <span class="pl-c1">=</span> <span class="pl-v">Histogram</span>(
+<span class="pl-s1">http_response_size_bytes</span> <span class="pl-c1">=</span> <span class="pl-en">Histogram</span>(
     <span class="pl-s">"http_response_size_bytes"</span>,
     <span class="pl-s">"HTTP response size in bytes"</span>,
     [<span class="pl-s">"method"</span>, <span class="pl-s">"endpoint"</span>]
 )
-<span class="pl-s1">active_requests</span> <span class="pl-c1">=</span> <span class="pl-v">Gauge</span>(
+<span class="pl-s1">active_requests</span> <span class="pl-c1">=</span> <span class="pl-en">Gauge</span>(
     <span class="pl-s">"active_requests"</span>,
     <span class="pl-s">"Number of active requests"</span>
 )
-<span class="pl-s1">error_counter</span> <span class="pl-c1">=</span> <span class="pl-v">Counter</span>(
+<span class="pl-s1">error_counter</span> <span class="pl-c1">=</span> <span class="pl-en">Counter</span>(
     <span class="pl-s">"error_counter"</span>,
     <span class="pl-s">"Total number of HTTP errors"</span>,
     [<span class="pl-s">"method"</span>, <span class="pl-s">"endpoint"</span>, <span class="pl-s">"http_status"</span>]
 )
 
-<span class="pl-s1">cpu_usage</span> <span class="pl-c1">=</span> <span class="pl-v">Gauge</span>(<span class="pl-s">"cpu_usage_percent"</span>, <span class="pl-s">"CPU usage in percent"</span>)
-<span class="pl-s1">memory_usage</span> <span class="pl-c1">=</span> <span class="pl-v">Gauge</span>(<span class="pl-s">"memory_usage_percent"</span>, <span class="pl-s">"Memory usage in percent"</span>)
-<span class="pl-s1">disk_usage</span> <span class="pl-c1">=</span> <span class="pl-v">Gauge</span>(<span class="pl-s">"disk_usage_percent"</span>, <span class="pl-s">"Disk usage in percent"</span>)
-<span class="pl-s1">network_in</span> <span class="pl-c1">=</span> <span class="pl-v">Gauge</span>(<span class="pl-s">"network_received_bytes"</span>, <span class="pl-s">"Network received bytes"</span>)
-<span class="pl-s1">network_out</span> <span class="pl-c1">=</span> <span class="pl-v">Gauge</span>(<span class="pl-s">"network_sent_bytes"</span>, <span class="pl-s">"Network sent bytes"</span>)
+<span class="pl-s1">cpu_usage</span> <span class="pl-c1">=</span> <span class="pl-en">Gauge</span>(<span class="pl-s">"cpu_usage_percent"</span>, <span class="pl-s">"CPU usage in percent"</span>)
+<span class="pl-s1">memory_usage</span> <span class="pl-c1">=</span> <span class="pl-en">Gauge</span>(<span class="pl-s">"memory_usage_percent"</span>, <span class="pl-s">"Memory usage in percent"</span>)
+<span class="pl-s1">disk_usage</span> <span class="pl-c1">=</span> <span class="pl-en">Gauge</span>(<span class="pl-s">"disk_usage_percent"</span>, <span class="pl-s">"Disk usage in percent"</span>)
+<span class="pl-s1">network_in</span> <span class="pl-c1">=</span> <span class="pl-en">Gauge</span>(<span class="pl-s">"network_received_bytes"</span>, <span class="pl-s">"Network received bytes"</span>)
+<span class="pl-s1">network_out</span> <span class="pl-c1">=</span> <span class="pl-en">Gauge</span>(<span class="pl-s">"network_sent_bytes"</span>, <span class="pl-s">"Network sent bytes"</span>)
 
-<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-en">middleware</span>(<span class="pl-s">"http"</span>)</span>
-<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">record_request_start_time</span>(<span class="pl-s1">request</span>: <span class="pl-v">Request</span>, <span class="pl-s1">call_next</span>):
-    <span class="pl-s1">request</span>.<span class="pl-s1">state</span>.<span class="pl-s1">start_time</span> <span class="pl-c1">=</span> <span class="pl-s1">time</span>.<span class="pl-en">time</span>()
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">middleware</span>(<span class="pl-s">"http"</span>)</span>
+<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">record_request_start_time</span>(<span class="pl-s1">request</span>: <span class="pl-smi">Request</span>, <span class="pl-s1">call_next</span>):
+    <span class="pl-s1">request</span>.<span class="pl-c1">state</span>.<span class="pl-c1">start_time</span> <span class="pl-c1">=</span> <span class="pl-s1">time</span>.<span class="pl-c1">time</span>()
     <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">call_next</span>(<span class="pl-s1">request</span>)
     <span class="pl-k">return</span> <span class="pl-s1">response</span>
 
-<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-en">middleware</span>(<span class="pl-s">"http"</span>)</span>
-<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">record_request_end_time</span>(<span class="pl-s1">request</span>: <span class="pl-v">Request</span>, <span class="pl-s1">call_next</span>):
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">middleware</span>(<span class="pl-s">"http"</span>)</span>
+<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">record_request_end_time</span>(<span class="pl-s1">request</span>: <span class="pl-smi">Request</span>, <span class="pl-s1">call_next</span>):
     <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">call_next</span>(<span class="pl-s1">request</span>)
-    <span class="pl-s1">latency</span> <span class="pl-c1">=</span> <span class="pl-s1">time</span>.<span class="pl-en">time</span>() <span class="pl-c1">-</span> <span class="pl-s1">request</span>.<span class="pl-s1">state</span>.<span class="pl-s1">start_time</span>
-    <span class="pl-s1">http_request_duration_seconds</span>.<span class="pl-en">labels</span>(
-        <span class="pl-s1">request</span>.<span class="pl-s1">method</span>, <span class="pl-s1">request</span>.<span class="pl-s1">url</span>.<span class="pl-s1">path</span>
-    ).<span class="pl-en">observe</span>(<span class="pl-s1">latency</span>)
-    <span class="pl-s1">http_request_size_bytes</span>.<span class="pl-en">labels</span>(
-        <span class="pl-s1">request</span>.<span class="pl-s1">method</span>, <span class="pl-s1">request</span>.<span class="pl-s1">url</span>.<span class="pl-s1">path</span>
-    ).<span class="pl-en">observe</span>(<span class="pl-s1">request</span>.<span class="pl-s1">headers</span>.<span class="pl-en">get</span>(<span class="pl-s">"Content-Length"</span>, <span class="pl-c1">0</span>))
+    <span class="pl-s1">latency</span> <span class="pl-c1">=</span> <span class="pl-s1">time</span>.<span class="pl-c1">time</span>() <span class="pl-c1">-</span> <span class="pl-s1">request</span>.<span class="pl-c1">state</span>.<span class="pl-c1">start_time</span>
+    <span class="pl-s1">http_request_duration_seconds</span>.<span class="pl-c1">labels</span>(
+        <span class="pl-s1">request</span>.<span class="pl-c1">method</span>, <span class="pl-s1">request</span>.<span class="pl-c1">url</span>.<span class="pl-c1">path</span>
+    ).<span class="pl-c1">observe</span>(<span class="pl-s1">latency</span>)
+    <span class="pl-s1">http_request_size_bytes</span>.<span class="pl-c1">labels</span>(
+        <span class="pl-s1">request</span>.<span class="pl-c1">method</span>, <span class="pl-s1">request</span>.<span class="pl-c1">url</span>.<span class="pl-c1">path</span>
+    ).<span class="pl-c1">observe</span>(<span class="pl-s1">request</span>.<span class="pl-c1">headers</span>.<span class="pl-c1">get</span>(<span class="pl-s">"Content-Length"</span>, <span class="pl-c1">0</span>))
     <span class="pl-k">if</span> <span class="pl-en">isinstance</span>(<span class="pl-s1">response</span>, <span class="pl-v">StreamingResponse</span>):
         <span class="pl-s1">response_size</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
     <span class="pl-k">else</span>:
-        <span class="pl-s1">response_size</span> <span class="pl-c1">=</span> <span class="pl-en">len</span>(<span class="pl-s1">response</span>.<span class="pl-s1">content</span>)
-    <span class="pl-s1">http_response_size_bytes</span>.<span class="pl-en">labels</span>(
-        <span class="pl-s1">request</span>.<span class="pl-s1">method</span>, <span class="pl-s1">request</span>.<span class="pl-s1">url</span>.<span class="pl-s1">path</span>
-    ).<span class="pl-en">observe</span>(<span class="pl-s1">response_size</span>)
-    <span class="pl-s1">http_requests_total</span>.<span class="pl-en">labels</span>(
-        <span class="pl-s1">request</span>.<span class="pl-s1">method</span>, <span class="pl-s1">request</span>.<span class="pl-s1">url</span>.<span class="pl-s1">path</span>, <span class="pl-s1">response</span>.<span class="pl-s1">status_code</span>
-    ).<span class="pl-en">inc</span>()
+        <span class="pl-s1">response_size</span> <span class="pl-c1">=</span> <span class="pl-en">len</span>(<span class="pl-s1">response</span>.<span class="pl-c1">content</span>)
+    <span class="pl-s1">http_response_size_bytes</span>.<span class="pl-c1">labels</span>(
+        <span class="pl-s1">request</span>.<span class="pl-c1">method</span>, <span class="pl-s1">request</span>.<span class="pl-c1">url</span>.<span class="pl-c1">path</span>
+    ).<span class="pl-c1">observe</span>(<span class="pl-s1">response_size</span>)
+    <span class="pl-s1">http_requests_total</span>.<span class="pl-c1">labels</span>(
+        <span class="pl-s1">request</span>.<span class="pl-c1">method</span>, <span class="pl-s1">request</span>.<span class="pl-c1">url</span>.<span class="pl-c1">path</span>, <span class="pl-s1">response</span>.<span class="pl-c1">status_code</span>
+    ).<span class="pl-c1">inc</span>()
     <span class="pl-k">return</span> <span class="pl-s1">response</span>
 
-<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-en">middleware</span>(<span class="pl-s">"http"</span>)</span>
-<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">increment_counter</span>(<span class="pl-s1">request</span>: <span class="pl-v">Request</span>, <span class="pl-s1">call_next</span>):
-    <span class="pl-s1">active_requests</span>.<span class="pl-en">inc</span>()
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">middleware</span>(<span class="pl-s">"http"</span>)</span>
+<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">increment_counter</span>(<span class="pl-s1">request</span>: <span class="pl-smi">Request</span>, <span class="pl-s1">call_next</span>):
+    <span class="pl-s1">active_requests</span>.<span class="pl-c1">inc</span>()
     <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">call_next</span>(<span class="pl-s1">request</span>)
-    <span class="pl-s1">active_requests</span>.<span class="pl-en">dec</span>()
+    <span class="pl-s1">active_requests</span>.<span class="pl-c1">dec</span>()
     <span class="pl-k">return</span> <span class="pl-s1">response</span>
 
-<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-en">middleware</span>(<span class="pl-s">"http"</span>)</span>
-<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">log_saturation</span>(<span class="pl-s1">request</span>: <span class="pl-v">Request</span>, <span class="pl-s1">call_next</span>):
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">middleware</span>(<span class="pl-s">"http"</span>)</span>
+<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">log_saturation</span>(<span class="pl-s1">request</span>: <span class="pl-smi">Request</span>, <span class="pl-s1">call_next</span>):
     <span class="pl-s1">max_concurrent_requests</span> <span class="pl-c1">=</span> <span class="pl-c1">10</span>  <span class="pl-c"># set the maximum number of concurrent requests</span>
-    <span class="pl-s1">saturation_ratio</span> <span class="pl-c1">=</span> <span class="pl-s1">active_requests</span>.<span class="pl-s1">_value</span>.<span class="pl-s1">_value</span> <span class="pl-c1">/</span> <span class="pl-s1">max_concurrent_requests</span>
+    <span class="pl-s1">saturation_ratio</span> <span class="pl-c1">=</span> <span class="pl-s1">active_requests</span>.<span class="pl-c1">_value</span>.<span class="pl-c1">_value</span> <span class="pl-c1">/</span> <span class="pl-s1">max_concurrent_requests</span>
     <span class="pl-en">print</span>(<span class="pl-s">f"Saturation: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">saturation_ratio</span><span class="pl-kos">}</span></span>"</span>)
     <span class="pl-k">return</span> <span class="pl-k">await</span> <span class="pl-en">call_next</span>(<span class="pl-s1">request</span>)
 
-<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-en">middleware</span>(<span class="pl-s">"http"</span>)</span>
-<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">increment_error_counter</span>(<span class="pl-s1">request</span>: <span class="pl-v">Request</span>, <span class="pl-s1">call_next</span>):
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">middleware</span>(<span class="pl-s">"http"</span>)</span>
+<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">increment_error_counter</span>(<span class="pl-s1">request</span>: <span class="pl-smi">Request</span>, <span class="pl-s1">call_next</span>):
     <span class="pl-k">try</span>:
         <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">call_next</span>(<span class="pl-s1">request</span>)
         <span class="pl-k">return</span> <span class="pl-s1">response</span>
     <span class="pl-k">except</span> <span class="pl-v">HTTPException</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
-        <span class="pl-s1">error_counter</span>.<span class="pl-en">labels</span>(
-            <span class="pl-s1">request</span>.<span class="pl-s1">method</span>, <span class="pl-s1">request</span>.<span class="pl-s1">url</span>.<span class="pl-s1">path</span>, <span class="pl-s1">e</span>.<span class="pl-s1">status_code</span>
-        ).<span class="pl-en">inc</span>()
-        <span class="pl-en">print</span>(<span class="pl-s">f"Incremented error counter for <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">request</span>.<span class="pl-s1">method</span><span class="pl-kos">}</span></span> <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">request</span>.<span class="pl-s1">url</span>.<span class="pl-s1">path</span><span class="pl-kos">}</span></span> <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">e</span>.<span class="pl-s1">status_code</span><span class="pl-kos">}</span></span>"</span>)
+        <span class="pl-s1">error_counter</span>.<span class="pl-c1">labels</span>(
+            <span class="pl-s1">request</span>.<span class="pl-c1">method</span>, <span class="pl-s1">request</span>.<span class="pl-c1">url</span>.<span class="pl-c1">path</span>, <span class="pl-s1">e</span>.<span class="pl-c1">status_code</span>
+        ).<span class="pl-c1">inc</span>()
+        <span class="pl-en">print</span>(<span class="pl-s">f"Incremented error counter for <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">request</span>.<span class="pl-c1">method</span><span class="pl-kos">}</span></span> <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">request</span>.<span class="pl-c1">url</span>.<span class="pl-c1">path</span><span class="pl-kos">}</span></span> <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">e</span>.<span class="pl-c1">status_code</span><span class="pl-kos">}</span></span>"</span>)
         <span class="pl-k">raise</span> <span class="pl-s1">e</span>
 
 
-<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-en">get</span>(<span class="pl-s">"/"</span>)</span>
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">get</span>(<span class="pl-s">"/"</span>)</span>
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">root</span>():
     <span class="pl-k">return</span> {<span class="pl-s">"message"</span>: <span class="pl-s">"FastAPI server is running. Metrics are available at /metrics"</span>}
 
 
-<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-en">get</span>(<span class="pl-s">"/generate_traffic"</span>)</span>
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">get</span>(<span class="pl-s">"/generate_traffic"</span>)</span>
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">generate_traffic</span>():
     <span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">100</span>):
         <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">root</span>()
@@ -478,32 +478,32 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-k">return</span> {<span class="pl-s">"message"</span>: <span class="pl-s">"Generated traffic successfully."</span>}
 
 
-<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-en">get</span>(<span class="pl-s">"/generate_error"</span>)</span>
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">get</span>(<span class="pl-s">"/generate_error"</span>)</span>
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">generate_error</span>():
-    <span class="pl-k">raise</span> <span class="pl-v">HTTPException</span>(<span class="pl-s1">status_code</span><span class="pl-c1">=</span><span class="pl-c1">500</span>, <span class="pl-s1">detail</span><span class="pl-c1">=</span><span class="pl-s">"Generated an error."</span>)
+    <span class="pl-k">raise</span> <span class="pl-en">HTTPException</span>(<span class="pl-s1">status_code</span><span class="pl-c1">=</span><span class="pl-c1">500</span>, <span class="pl-s1">detail</span><span class="pl-c1">=</span><span class="pl-s">"Generated an error."</span>)
 
 <span class="pl-c"># 获取和更新系统监控数据</span>
 <span class="pl-k">def</span> <span class="pl-en">collect_system_metrics</span>():
     <span class="pl-c"># 更新 CPU 使用率</span>
-    <span class="pl-s1">cpu_usage</span>.<span class="pl-en">set</span>(<span class="pl-s1">psutil</span>.<span class="pl-en">cpu_percent</span>(<span class="pl-s1">interval</span><span class="pl-c1">=</span><span class="pl-c1">1</span>))
+    <span class="pl-s1">cpu_usage</span>.<span class="pl-c1">set</span>(<span class="pl-s1">psutil</span>.<span class="pl-c1">cpu_percent</span>(<span class="pl-s1">interval</span><span class="pl-c1">=</span><span class="pl-c1">1</span>))
     
     <span class="pl-c"># 更新内存使用情况</span>
-    <span class="pl-s1">memory</span> <span class="pl-c1">=</span> <span class="pl-s1">psutil</span>.<span class="pl-en">virtual_memory</span>()
-    <span class="pl-s1">memory_usage</span>.<span class="pl-en">set</span>(<span class="pl-s1">memory</span>.<span class="pl-s1">percent</span>)
+    <span class="pl-s1">memory</span> <span class="pl-c1">=</span> <span class="pl-s1">psutil</span>.<span class="pl-c1">virtual_memory</span>()
+    <span class="pl-s1">memory_usage</span>.<span class="pl-c1">set</span>(<span class="pl-s1">memory</span>.<span class="pl-c1">percent</span>)
     
     <span class="pl-c"># 更新磁盘使用情况</span>
-    <span class="pl-s1">disk</span> <span class="pl-c1">=</span> <span class="pl-s1">psutil</span>.<span class="pl-en">disk_usage</span>(<span class="pl-s">'/'</span>)
-    <span class="pl-s1">disk_usage</span>.<span class="pl-en">set</span>(<span class="pl-s1">disk</span>.<span class="pl-s1">percent</span>)
+    <span class="pl-s1">disk</span> <span class="pl-c1">=</span> <span class="pl-s1">psutil</span>.<span class="pl-c1">disk_usage</span>(<span class="pl-s">'/'</span>)
+    <span class="pl-s1">disk_usage</span>.<span class="pl-c1">set</span>(<span class="pl-s1">disk</span>.<span class="pl-c1">percent</span>)
     
     <span class="pl-c"># 更新网络流量</span>
-    <span class="pl-s1">net_io</span> <span class="pl-c1">=</span> <span class="pl-s1">psutil</span>.<span class="pl-en">net_io_counters</span>()
-    <span class="pl-s1">network_in</span>.<span class="pl-en">set</span>(<span class="pl-s1">net_io</span>.<span class="pl-s1">bytes_recv</span>)
-    <span class="pl-s1">network_out</span>.<span class="pl-en">set</span>(<span class="pl-s1">net_io</span>.<span class="pl-s1">bytes_sent</span>)
+    <span class="pl-s1">net_io</span> <span class="pl-c1">=</span> <span class="pl-s1">psutil</span>.<span class="pl-c1">net_io_counters</span>()
+    <span class="pl-s1">network_in</span>.<span class="pl-c1">set</span>(<span class="pl-s1">net_io</span>.<span class="pl-c1">bytes_recv</span>)
+    <span class="pl-s1">network_out</span>.<span class="pl-c1">set</span>(<span class="pl-s1">net_io</span>.<span class="pl-c1">bytes_sent</span>)
 
-<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-en">get</span>(<span class="pl-s">"/metrics"</span>)</span>
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">get</span>(<span class="pl-s">"/metrics"</span>)</span>
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">metrics</span>():
     <span class="pl-en">collect_system_metrics</span>()
-    <span class="pl-k">return</span> <span class="pl-v">Response</span>(<span class="pl-s1">content</span><span class="pl-c1">=</span><span class="pl-en">generate_latest</span>(), <span class="pl-s1">media_type</span><span class="pl-c1">=</span><span class="pl-v">CONTENT_TYPE_LATEST</span>)</pre></div></div>
+    <span class="pl-k">return</span> <span class="pl-en">Response</span>(<span class="pl-s1">content</span><span class="pl-c1">=</span><span class="pl-en">generate_latest</span>(), <span class="pl-s1">media_type</span><span class="pl-c1">=</span><span class="pl-c1">CONTENT_TYPE_LATEST</span>)</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
