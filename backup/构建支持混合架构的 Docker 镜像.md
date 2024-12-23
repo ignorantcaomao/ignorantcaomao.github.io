@@ -18,6 +18,7 @@ docker buildx inspect --bootstrap
 #### **安装 QEMU**
 QEMU 可以在 x86 主机上模拟 ARM 架构：
 ```bash
+# 注意，需要内核版本大于4.0 以上
 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 ```
 
@@ -71,7 +72,7 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 ```bash
 docker buildx build --platform linux/amd64,linux/arm64 \
   -t cn-north-4.myhuaweicloud.com/myproject/multiarch-image:latest \
-  --push .
+  --push --provenance=false .
 ```
 
 ---
@@ -126,7 +127,7 @@ docker run --rm <镜像地址> uname -m
    ```bash
    docker buildx build --platform linux/amd64,linux/arm64 \
      -t cn-north-4.myhuaweicloud.com/demo/multiarch-image:latest \
-     --push .
+     --push --provenance=false .
    ```
 
 2. **验证镜像的多架构支持**

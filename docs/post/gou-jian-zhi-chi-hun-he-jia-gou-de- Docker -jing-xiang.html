@@ -94,7 +94,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 docker buildx inspect --bootstrap</pre></div>
 <h4><strong>安装 QEMU</strong></h4>
 <p>QEMU 可以在 x86 主机上模拟 ARM 架构：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run --rm --privileged multiarch/qemu-user-static --reset -p yes</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 注意，需要内核版本大于4.0 以上</span>
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes</pre></div>
 <p>验证 QEMU 安装：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">docker run --rm -t arm64v8/ubuntu uname -m</pre></div>
 <p>如果输出是 <code class="notranslate">aarch64</code>，说明 ARM 模拟环境已经正确配置。</p>
@@ -130,7 +131,7 @@ docker buildx inspect --bootstrap</pre></div>
 <p>例如，将镜像推送到华为云 SWR：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">docker buildx build --platform linux/amd64,linux/arm64 \
   -t cn-north-4.myhuaweicloud.com/myproject/multiarch-image:latest \
-  --push <span class="pl-c1">.</span></pre></div>
+  --push --provenance=false <span class="pl-c1">.</span></pre></div>
 <hr>
 <h3>5. <strong>验证镜像</strong></h3>
 <p>在镜像仓库中查看镜像是否成功推送，并验证支持的架构。</p>
@@ -169,7 +170,7 @@ docker buildx inspect --bootstrap</pre></div>
 <p><strong>创建多架构镜像并推送到仓库</strong></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">docker buildx build --platform linux/amd64,linux/arm64 \
   -t cn-north-4.myhuaweicloud.com/demo/multiarch-image:latest \
-  --push <span class="pl-c1">.</span></pre></div>
+  --push --provenance=false <span class="pl-c1">.</span></pre></div>
 </li>
 <li>
 <p><strong>验证镜像的多架构支持</strong></p>
