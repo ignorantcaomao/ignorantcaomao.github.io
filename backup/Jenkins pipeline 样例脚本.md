@@ -1,3 +1,4 @@
+### 后端java pipeline脚本
 ```groovy
 // 做下拉框联动
 // 需要用到scriptler插件
@@ -241,6 +242,152 @@ pipeline {
           }
 
         }
+    }
+}
+
+```
+
+### 前端 pipeline脚本
+
+```groovy
+pipeline {
+    agent any
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '3')) //保留三个历史构建版本
+    }
+    
+    tools {
+       jdk 'jdk-11'
+       nodejs 'nodejs-14.17.6'
+    }
+    
+    
+
+    parameters {
+        // 代码地址
+        string(defaultValue: 'http://114.255.128.176:88/syb-dev/root/h-itmg/web/bcl/iot.git', description: '代码仓库地址', name: 'Gitlab_Registry_URL')
+        // 版本分支
+        gitParameter(branch: '', branchFilter: '.*', defaultValue: 'release-dev', description: '代码分支', name: 'branch', quickFilterEnabled: false, selectedValue: 'NONE', sortMode: 'NONE', tagFilter: '*', type: 'GitParameterDefinition')
+        
+        choice(name: 'Environment',choices: ['DEV','TEST','PROD'],description: "选类型")
+
+    }
+
+    environment {
+        commitLog = ''
+        commit_author = ''
+        ProjectName="${env.JOB_NAME}"
+        scannerHome = tool 'SonarQube_Scanner_4.8'
+    }
+
+    stages {
+        stage('代码拉取') {
+            steps {
+                echo '拉取Git代码'
+                checkout scmGit(branches: [[name: '${branch}']], extensions: [], userRemoteConfigs: [[credentialsId: '53773151-da42-4355-8504-45bcb0abb1eb', url: '${Gitlab_Registry_URL}']])
+                
+                script{
+                  // 获取最近一次代码提交信息
+                  commitLog = sh(script: 'git log --oneline -n 1',returnStdout: true).trim()
+                  echo "Git Commit Log:\n${commitLog}"
+                  
+                  commit_author = sh(script: 'git log -n 1 --pretty=format:"%an"',returnStdout: true).trim()
+                  echo "Git Commit Author:\n${commit_author}"
+        
+                  commit_counters = sh(script: 'git log --oneline | wc -l',returnStdout: true).trim()
+                  echo "Git Commit Counters:\n${commit_counters}"
+                } 
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            when {
+              expression { 
+                  // 检查复选框的值，如果包含'DEV'，则执行步骤
+                  return params.Environment.contains('DEV') 
+              }
+            }
+            steps{
+                echo '代码质量检查'
+                script{
+                    def SonarQube_URL=env.SonarQube_URL
+                    def SonarQube_Secret=env.SonarQube_Secret
+
+                    echo "${ProjectName}"
+                    echo "${SonarQube_URL}"
+                    echo "${SonarQube_Secret}"
+                    
+                    echo "${JAVA_HOME}"
+
+                    withSonarQubeEnv('SonarQube') {
+                        sh '''
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=${ProjectName} \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${SonarQube_URL} \
+                        -Dsonar.login=${SonarQube_Secret}
+                        '''
+                    }
+
+                    // 代码检测失败,将不再继续执行后面的任务,直接退出,报告返回的超时时长设为5分钟
+                    timeout(time: 3,unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                    }
+                }
+            }
+        }
+
+        stage('编译'){
+            when {
+                anyOf {
+                  expression { return params.Environment.contains('TEST') }
+                  expression { return params.Environment.contains('PROD') } 
+                }
+            }
+            steps{
+                script{
+                    sh """
+                    npm install
+                    npm run build
+                    """
+                }
+            }
+        }
+        
+        stage('测试环境更新'){
+            when {
+                expression { return params.Environment.contains('TEST') }
+            }
+            steps{
+                script{
+                    sh """
+                    rm -rf ariot
+                    mv dist ariot
+                    ssh root@192.168.3.55 "mv /usr/local/nginx/html/front/ariot  /usr/local/nginx/html/front/ariot-`date +%Y%m%d%H%M`"
+                    scp -r ariot root@192.168.3.55:/usr/local/nginx/html/front
+                    """
+                }
+            }
+        }
+
+        stage('演示环境更新'){
+            when {
+                expression { return params.Environment.contains('PORD') }
+            }
+            steps{
+                script{
+                    sh """
+                    rm -rf ariot
+                    mv dist ariot
+                    ssh root@192.168.3.30 "mv /home/hvpp-demo/front/ariot  /home/hvpp-demo/front/ariot-`date +%Y%m%d%H%M`"
+                    scp -r ariot root@192.168.3.30:/home/hvpp-demo/front
+                    """
+                }
+            }
+        }
+
+        
     }
 }
 
